@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Objetos Geometry en THREE.js</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script type="module">
+			import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+			//Importamos el orbitControls de la web
+			import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
+//Creates scene and camera
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+
+			//Creates renderer and adds it to the DOM
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+
+			//Direccion de la luz 
+			var directionalLight = new THREE.DirectionalLight( 0xffffff, 2 ); 
+			var directionalLight2 = new THREE.DirectionalLight( 0xffffff, 2 ); 
+			//Posicion de la luz esta apunta desde las izquierda 
+			directionalLight.position.set(-20,1,1);
+            scene.add( directionalLight );
+				//Posicion de la luz esta apunta desde el frente con el fin de que se vea completamente la figura
+			directionalLight.position.set(1,1,20);
+            scene.add( directionalLight );
+			 //Dimensiones figuras
+			 var dim = [[1,1,1], [4,4,4], [1,24,80]]; //tamaño
+            //Arreglos de Geometrias 
+			var Geometrias=[]//Inicia vacio para luego push las geometrias con sus correspondientes figuras
+
+			Geometrias.push(new THREE.BoxGeometry(dim[0][0])); //Geometria de Cubo,utilizando el arreglo de las dimensiones
+			Geometrias.push(new THREE.SphereGeometry(dim[1][0]));//Geometria de la esfera,utilizando el arreglo de las dimensiones
+			Geometrias.push(new THREE.ConeGeometry(dim[2][0]));//Geometria del cono,utilizando el arreglo de las dimensiones
+            //Arreglo de colores
+			var colores=[{color:0xff0000}, {color:0x00ffff}, {color:0x00ff00}];
+			//Arreglo de materiales
+			var materiales=[new THREE.MeshMatcapMaterial(colores[0]),new THREE.MeshNormalMaterial(colores[1]),new THREE.MeshPhongMaterial(colores[2])]
+		 //Tambien esta MeshToonMaterial,MeshPhysical,MeshStandar,MeshMatcap.Esto los encontramos en la pagina oficial de JS.org
+
+			var fig =[];
+            for (let i=0; i<3; i++) {
+                fig.push(new THREE.Mesh(Geometrias[i], materiales[i])); //creacion de figuras
+            }
+
+            for (let i=0; i<3; i++) { //let te permite declarar variables limitando su alcance (scope) al bloque, declaración, o expresión donde se está usando.
+                scene.add( fig[i] ); //Añadimos las figuras a la escena
+            }
+            //Posicion de las figuras
+
+            fig[0].position.x = -10; 
+            fig[0].position.y = 0;
+            fig[0].position.z = 0;
+
+            fig[1].position.x = 0;
+            fig[1].position.y = 0;
+            fig[1].position.z = 0;
+
+            fig[2].position.x = 10;
+            fig[2].position.y = 0;
+            fig[2].position.z = 0;
+            
+
+            camera.position.x = 0;
+            camera.position.y = 0;
+            camera.position.z = 10;
+          //Creamos la variable controls la cual es tipo orbitControls con los parametros de la camara que es la cual deseamos mover con el mouse
+			var controls = new OrbitControls(camera, renderer.domElement);
+
+
+			function renderizar() { //Rotacion de las figuras
+				requestAnimationFrame( renderizar );
+
+				fig[0].rotation.x += 0.01;
+				fig[0].rotation.y += 0.01;
+
+                fig[1].rotation.x += 0.01;
+				fig[1].rotation.y += 0.01;
+
+                fig[2].rotation.x += 0.01;
+				fig[2].rotation.y += 0.01;
+
+				renderer.render( scene, camera);
+			}
+
+			renderizar();
+		</script>
+	</body>
+</html>
+
